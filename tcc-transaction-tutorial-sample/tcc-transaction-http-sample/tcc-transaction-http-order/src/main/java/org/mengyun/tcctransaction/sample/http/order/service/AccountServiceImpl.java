@@ -9,6 +9,7 @@ import java.math.BigDecimal;
 
 /**
  * Created by twinkle.zhou on 16/11/11.
+ * 调用红包和资金服务获取用户账户余额和红包
  */
 @Service("accountService")
 public class AccountServiceImpl {

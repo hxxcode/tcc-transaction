@@ -16,6 +16,9 @@ import java.util.Calendar;
 
 /**
  * Created by changming.xie on 4/1/16.
+ * 支付
+ * 确认支付
+ * 取消支付
  */
 @Service
 public class PaymentServiceImpl {
@@ -26,7 +29,8 @@ public class PaymentServiceImpl {
     @Autowired
     OrderRepository orderRepository;
 
-
+    //三个服务联合行动。调整余额依赖于支付，所以这两个写在支付逻辑中。使支付和修改余额产生分布式事务关系。
+    //一个大的tcc套几个小的tcc
     @Compensable(confirmMethod = "confirmMakePayment", cancelMethod = "cancelMakePayment", asyncConfirm = true)
     @Transactional
     public void makePayment(Order order, BigDecimal redPacketPayAmount, BigDecimal capitalPayAmount) {
@@ -35,7 +39,7 @@ public class PaymentServiceImpl {
 
         //check if the order status is DRAFT, if no, means that another call makePayment for the same order happened, ignore this call makePayment.
         if (order.getStatus().equals("DRAFT")) {
-
+            //支付
             order.pay(redPacketPayAmount, capitalPayAmount);
             try {
                 orderRepository.updateOrder(order);
@@ -43,8 +47,9 @@ public class PaymentServiceImpl {
                 //ignore the concurrently update order exception, ensure idempotency.
             }
         }
-
+        //调整余额
         String result = tradeOrderServiceProxy.record(null, buildCapitalTradeOrderDto(order));
+        //调整红包
         String result2 = tradeOrderServiceProxy.record(null, buildRedPacketTradeOrderDto(order));
     }
 

@@ -15,6 +15,8 @@ import java.util.List;
 
 /**
  * Created by changming.xie on 4/1/16.
+ * 下单
+ * 调用相关方法创建订单和支付
  */
 @Service
 public class PlaceOrderServiceImpl {
@@ -32,11 +34,13 @@ public class PlaceOrderServiceImpl {
     public String placeOrder(long payerUserId, long shopId, List<Pair<Long, Integer>> productQuantities, BigDecimal redPacketPayAmount) {
         Shop shop = shopRepository.findById(shopId);
 
+        //下单
         Order order = orderService.createOrder(payerUserId, shop.getOwnerUserId(), productQuantities);
 
         Boolean result = false;
 
         try {
+            //支付
             paymentService.makePayment(order, redPacketPayAmount, order.getTotalAmount().subtract(redPacketPayAmount));
 
         } catch (ConfirmingException confirmingException) {

@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 
 /**
  * Created by changming.xie on 4/19/17.
+ * 调用资金和红包服务调整余额
  */
 @Component
 public class TradeOrderServiceProxy {

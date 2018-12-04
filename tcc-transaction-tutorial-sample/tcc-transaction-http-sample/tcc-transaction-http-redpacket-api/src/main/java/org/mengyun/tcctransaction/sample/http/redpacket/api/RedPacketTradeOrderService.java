@@ -5,6 +5,7 @@ import org.mengyun.tcctransaction.sample.http.redpacket.api.dto.RedPacketTradeOr
 
 /**
  * Created by changming.xie on 4/1/16.
+ * 调整红包余额
  */
 public interface RedPacketTradeOrderService {
 
