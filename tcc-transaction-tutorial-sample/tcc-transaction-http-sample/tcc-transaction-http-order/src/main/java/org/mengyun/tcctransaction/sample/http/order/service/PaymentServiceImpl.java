@@ -29,6 +29,7 @@ public class PaymentServiceImpl {
     @Autowired
     OrderRepository orderRepository;
 
+    //主业务是支付，从业务是红包和余额
     //三个服务联合行动。调整余额依赖于支付，所以这两个写在支付逻辑中。使支付和修改余额产生分布式事务关系。
     //一个大的tcc套几个小的tcc
     @Compensable(confirmMethod = "confirmMakePayment", cancelMethod = "cancelMakePayment", asyncConfirm = true)
